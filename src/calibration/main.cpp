@@ -1,24 +1,14 @@
 #include <pins.h>
 #include <Arduino.h>
-#include <stdio.h> // Include for snprintf
-
-// Helper function to get channel name string
-const char* getChannelName(Inputs input) {
-    switch (input) {
-        case R_INPUT: return "Red";
-        case G_INPUT: return "Green";
-        case B_INPUT: return "Blue";
-        case MASTER_INPUT: return "Master";
-        default: return "Unknown";
-    }
-}
+#include <stdio.h>
+#include <power.h>
 
 void run() {
     pinMode(ADC_PINS[R_INPUT], INPUT);
     pinMode(ADC_PINS[G_INPUT], INPUT);
     pinMode(ADC_PINS[B_INPUT], INPUT);
     pinMode(ADC_PINS[MASTER_INPUT], INPUT);
-    
+    setupPower();
 
     while (1) {
 
@@ -31,12 +21,23 @@ void run() {
         int blueValue = readCalibratedValue(B_INPUT);
         int masterRaw = analogRead(ADC_PINS[MASTER_INPUT]);
         int masterValue = readCalibratedValue(MASTER_INPUT);
+
+        // Read the power button state
+        bool powerButtonState = loopPower();
     
         // Input range is stored in INPUT_RANGE_MAP
     
         // Print the values to the serial monitor
-        char buffer[512];
+        char buffer[1024];
         int offset = 0;
+
+        // Print for Teleplot
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, "Teleplot Data:\n");
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, ">R_INPUT: %d\n", redRaw);
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, ">G_INPUT: %d\n", greenRaw);
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, ">B_INPUT: %d\n", blueRaw);
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, ">MASTER_INPUT: %d\n", masterRaw);
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset, ">POWER_BUTTON: %d\n", powerButtonState);
     
         offset += snprintf(buffer + offset, sizeof(buffer) - offset, "--- Sensor Readings ---\n");
     
@@ -63,10 +64,15 @@ void run() {
             "Channel: %s | Pin: %d | Raw: %d | Calc: %d | Range: [%d, %d]\n",
             getChannelName(MASTER_INPUT), ADC_PINS[MASTER_INPUT], masterRaw, masterValue,
             INPUT_RANGE_MAP[MASTER_INPUT][0], INPUT_RANGE_MAP[MASTER_INPUT][1]);
+
+        // Power Button Input
+        offset += snprintf(buffer + offset, sizeof(buffer) - offset,
+            "Input: Power Button | Pin: %d | State: %s\n",
+            MASTER_POWER_PIN, powerButtonState == HIGH ? "HIGH (Not Pressed)" : "LOW (Pressed)");
     
         offset += snprintf(buffer + offset, sizeof(buffer) - offset, "-----------------------\n");
     
-        Serial.print(buffer); // Use print instead of println to avoid extra newline
+        Serial.println(buffer);
     }
 
 }

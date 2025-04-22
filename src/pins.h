@@ -15,6 +15,7 @@ extern const uint8_t B_INPUT_PIN;
 
 extern const uint8_t MASTER_INPUT_PIN;
 extern const uint8_t MASTER_POWER_PIN;
+extern const uint8_t MASTER_POWER_LIGHT_PIN;
 
 extern const uint8_t MAX_INPUT_VALUE;
 
@@ -29,3 +30,5 @@ enum Inputs {
     MASTER_INPUT = 3
 };
 int readCalibratedValue(Inputs input);
+
+const char* getChannelName(Inputs input);

@@ -2,20 +2,22 @@
 #include <Arduino.h>
 
 
-const uint8_t R_DISP_SCK_PIN = 4;
-const uint8_t R_DISP_SDA_PIN = 5;
-const uint8_t R_INPUT_PIN = 40;
+const uint8_t R_DISP_SCK_PIN = 6;
+const uint8_t R_DISP_SDA_PIN = 7;
+const uint8_t R_INPUT_PIN = 1;
 
-const uint8_t G_DISP_SCK_PIN = 6;
-const uint8_t G_DISP_SDA_PIN = 7;
-const uint8_t G_INPUT_PIN = 39;
+const uint8_t G_DISP_SCK_PIN = 8;
+const uint8_t G_DISP_SDA_PIN = 9;
+const uint8_t G_INPUT_PIN = 2;
 
-const uint8_t B_DISP_SCK_PIN = 8;
-const uint8_t B_DISP_SDA_PIN = 9;
-const uint8_t B_INPUT_PIN = 38;
+const uint8_t B_DISP_SCK_PIN = 10;
+const uint8_t B_DISP_SDA_PIN = 11;
+const uint8_t B_INPUT_PIN = 3;
 
-const uint8_t MASTER_INPUT_PIN = 18;
+const uint8_t MASTER_INPUT_PIN = 4;
 const uint8_t MASTER_POWER_PIN = 21;
+
+const uint8_t MASTER_POWER_LIGHT_PIN = 18; 
 
 const uint8_t MAX_INPUT_VALUE = 255;
 
@@ -37,4 +39,15 @@ int readCalibratedValue(Inputs input) {
 
     int calibratedValue = map(rawValue, minRange, maxRange, 0, MAX_INPUT_VALUE);
     return calibratedValue;
+}
+
+// Helper function to get channel name string
+const char* getChannelName(Inputs input) {
+    switch (input) {
+        case R_INPUT: return "Red";
+        case G_INPUT: return "Green";
+        case B_INPUT: return "Blue";
+        case MASTER_INPUT: return "Master";
+        default: return "Unknown";
+    }
 }
