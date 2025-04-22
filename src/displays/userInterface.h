@@ -1,11 +1,11 @@
 #pragma once
 
-class UserInterface {
-    public:
-        void begin();
-        KnobState loop();
-};
 
+struct ColourWay {
+    int red;
+    int green;
+    int blue;
+};
 
 struct KnobState {
     bool changed;
@@ -15,8 +15,8 @@ struct KnobState {
     ColourWay muxedValues;
 };
 
-struct ColourWay {
-    int red;
-    int green;
-    int blue;
+class UserInterface {
+    public:
+        void begin();
+        KnobState loop();
 };
