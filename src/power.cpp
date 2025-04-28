@@ -25,7 +25,7 @@ bool loopPower() {
 
     if (powerButtonState) {
         powerState = !powerState; // Toggle the power state
-        digitalWrite(MASTER_POWER_LIGHT_PIN, powerState ? HIGH : LOW); // Turn on/off the power light
+        digitalWrite(MASTER_POWER_LIGHT_PIN, !powerState ? HIGH : LOW); // Turn on/off the power light
     }
     return powerState;
 }

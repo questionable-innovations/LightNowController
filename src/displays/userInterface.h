@@ -1,4 +1,5 @@
 #pragma once
+#include "channelDisplay.h"
 
 
 struct ColourWay {
@@ -17,6 +18,11 @@ struct KnobState {
 
 class UserInterface {
     public:
+        UserInterface();
         void begin();
         KnobState loop();
+    private:
+        ChannelDisplay redDisplay;
+        ChannelDisplay greenDisplay;
+        ChannelDisplay blueDisplay;
 };

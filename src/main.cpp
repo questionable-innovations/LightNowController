@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include "./calibration/main.h"
+#include "displays/userInterface.h"
+
+UserInterface ui;
 
 void setup() {
   Serial.begin(115200);
@@ -13,8 +16,16 @@ void setup() {
   }
   #endif
 
+  delay(3000);
+  Serial.println("Starting user interface");
+
+  ui.begin();
+  Serial.println("User interface started");
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  ui.loop();
+  Serial.println("Looping in user interface");
+  delay(100);
 }

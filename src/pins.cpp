@@ -25,10 +25,10 @@ const uint8_t ADC_PINS[] = {R_INPUT_PIN, G_INPUT_PIN, B_INPUT_PIN, MASTER_INPUT_
 
 
 const int INPUT_RANGE_MAP[][2] = {
-    {0, 4095}, // R_INPUT_PIN
-    {0, 4095}, // G_INPUT_PIN
-    {0, 4095}, // B_INPUT_PIN
-    {0, 4095}  // MASTER_INPUT_PIN
+    {0, 8191}, // R_INPUT_PIN
+    {0, 8191}, // G_INPUT_PIN
+    {0, 8191}, // B_INPUT_PIN
+    {0, 8191}  // MASTER_INPUT_PIN
 };
 
 int readCalibratedValue(Inputs input) {
