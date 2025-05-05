@@ -5,7 +5,7 @@
 
 Bounce2::Button button = Bounce2::Button();
 
-bool powerState = false;
+bool powerState = true;
 
 void setupPower() {
     button.attach(MASTER_POWER_PIN, INPUT_PULLUP);

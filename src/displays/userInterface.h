@@ -10,7 +10,7 @@ struct ColourWay {
 
 struct KnobState {
     bool changed;
-    
+    bool powerState;
     ColourWay rawValues;
     int master;
     ColourWay muxedValues;

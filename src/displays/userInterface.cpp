@@ -1,12 +1,9 @@
-#include <U8g2lib.h>
 #include "userInterface.h"
 #include <pins.h>
+#include "displayConfig.h"
+#include <power.h>
 
-const u8g2_cb_t* rotation = U8G2_R0; // U8G2_R0, U8G2_R1, U8G2_R2, U8G2_R3
 
-U8G2_SSD1306_128X64_VCOMH0_F_HW_I2C redDisplayRaw = U8G2_SSD1306_128X64_VCOMH0_F_HW_I2C(rotation, U8X8_PIN_NONE, R_DISP_SCK_PIN, R_DISP_SDA_PIN);
-U8G2_SSD1306_128X64_NONAME_F_SW_I2C greenDisplayRaw = U8G2_SSD1306_128X64_NONAME_F_SW_I2C(rotation, U8X8_PIN_NONE, G_DISP_SCK_PIN, G_DISP_SDA_PIN);
-U8G2_SSD1306_128X64_NONAME_F_SW_I2C blueDisplayRaw = U8G2_SSD1306_128X64_NONAME_F_SW_I2C(rotation, U8X8_PIN_NONE, B_DISP_SCK_PIN, B_DISP_SDA_PIN);
 
 UserInterface::UserInterface()
     : redDisplay(redDisplayRaw, R_INPUT),
@@ -19,18 +16,26 @@ void UserInterface::begin() {
     Serial.println("UserInterface::begin()");
 
     redDisplay.begin();
-    // greenDisplay.begin();
-    // blueDisplay.begin();
+    greenDisplay.begin();
+    blueDisplay.begin();
 
     redDisplay.setMasterInput(1);
-    // greenDisplay.setMasterInput(1);
-    // blueDisplay.setMasterInput(1);
+    greenDisplay.setMasterInput(1);
+    blueDisplay.setMasterInput(1);
+
+    setupPower();
 }
 
 KnobState UserInterface::loop() {
     Serial.println("UserInterface::loop()");
     KnobState knobState;
     knobState.changed = false;
+
+    // Power
+    bool powerState = loopPower();
+    redDisplay.setDisplayPower(powerState);
+    greenDisplay.setDisplayPower(powerState);
+    blueDisplay.setDisplayPower(powerState);
 
     bool redChanged = redDisplay.loop();
     bool greenChanged = greenDisplay.loop();
@@ -39,24 +44,27 @@ KnobState UserInterface::loop() {
     if (redChanged || greenChanged || blueChanged) {
         knobState.changed = true;
     }
-    redDisplay.renderDisplay();
-    // greenDisplay.renderDisplay();
-    // blueDisplay.renderDisplay();
-
-    // if (redChanged) {
+    
+    if (redChanged) {
+        redDisplay.renderDisplay();
         redDisplay.updateDisplay();
-    // }
-    // if (greenChanged) {
-    //     greenDisplay.updateDisplay();
-    // }
-    // if (blueChanged) {
-    //     blueDisplay.updateDisplay();
-    // }
+    }
+    if (greenChanged) {
+        greenDisplay.renderDisplay();
+        greenDisplay.updateDisplay();
+    }
+    if (blueChanged) {
+        blueDisplay.renderDisplay();
+        blueDisplay.updateDisplay();
+    }
+    
     knobState.rawValues.red = redDisplay.getValue();
-    // knobState.rawValues.green = greenDisplay.getValue();
-    // knobState.rawValues.blue = blueDisplay.getValue();
+    knobState.rawValues.green = greenDisplay.getValue();
+    knobState.rawValues.blue = blueDisplay.getValue();
 
-        
+    knobState.powerState = powerState; 
+    Serial.print("Power state: ");
+    Serial.println(knobState.powerState ? "ON" : "OFF");
 
-    return KnobState();
+    return knobState;
 }

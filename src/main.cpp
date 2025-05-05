@@ -16,7 +16,6 @@ void setup() {
   }
   #endif
 
-  delay(3000);
   Serial.println("Starting user interface");
 
   ui.begin();

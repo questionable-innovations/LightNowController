@@ -30,6 +30,7 @@ private:
     
     Inputs analogInput;
     int currentValue = 0;
+    bool currentPowerState = true;
 
     int lastValue = 0; // Last value read from the analog input
     int masterInputValue = 0; // Value of the master input (if applicable)
